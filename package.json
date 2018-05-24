@@ -1,0 +1,32 @@
+{
+  "name": "react-qae",
+  "version": "0.0.1",
+  "description": "React integration for the Qlik Associative Engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skokenes/react-qae.git"
+  },
+  "keywords": [
+    "qlik",
+    "react",
+    "qae",
+    "qix",
+    "engine"
+  ],
+  "author": "Speros Kokenes",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/skokenes/react-qae/issues"
+  },
+  "homepage": "https://github.com/skokenes/react-qae#readme",
+  "dependencies": {
+    "react": "^16.4.0",
+    "recompose": "^0.27.1",
+    "rxjs": "^5.5.0",
+    "rxq": "^1.0.0"
+  }
+}
