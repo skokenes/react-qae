@@ -31,7 +31,7 @@
     "react": "^16.4.0",
     "recompose": "^0.27.1",
     "rxjs": "^6.2.1",
-    "rxq": "^2.0.0"
+    "rxq": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
