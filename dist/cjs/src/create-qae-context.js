@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
 var _react = require("react");
 
@@ -12,27 +13,26 @@ var _Global = require("rxq/Global");
 
 var _operators = require("rxjs/operators");
 
-var _genericObject = require("./components/generic-object");
+var _genericObject = _interopRequireDefault(require("./components/generic-object"));
 
-var _genericObject2 = _interopRequireDefault(_genericObject);
+var _rxjs = require("rxjs");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (config) {
+var _default = function _default(config) {
   var session = (0, _rxq.connectSession)(config);
   var global$ = session.global$;
-
-  // What if they dont have appname? don't connect app?
-  var doc$ = global$.pipe((0, _operators.switchMap)(function (h) {
+  var doc$ = typeof config.appname !== "undefined" ? global$.pipe((0, _operators.switchMap)(function (h) {
     return h.ask(_Global.OpenDoc, config.appname);
-  }), (0, _operators.shareReplay)(1));
+  }), (0, _operators.shareReplay)(1)) : (0, _rxjs.throwError)(new Error("You are trying to use doc$ but did not define an appname in your qae config."));
+  var QaeService = {
+    session: session,
+    global$: global$,
+    doc$: doc$
+  }; // auto provider?
 
-  var QaeService = { session: session, global$: global$, doc$: doc$ };
-
-  // auto provider?
   var QaeContext = (0, _react.createContext)(QaeService);
-  var GenericObject = (0, _genericObject2.default)(QaeContext);
-
+  var GenericObject = (0, _genericObject.default)(QaeContext);
   return {
     QaeProvider: QaeContext.Provider,
     QaeConsumer: QaeContext.Consumer,
@@ -40,3 +40,5 @@ exports.default = function (config) {
     QaeService: QaeService
   };
 };
+
+exports.default = _default;
