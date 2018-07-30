@@ -1,14 +1,16 @@
 import React, { createContext } from "react";
-import { connectSession } from "rxq";
+import { connectSession, Session } from "rxq";
+// @ts-ignore
 import { OpenDoc } from "rxq/Global";
 import { switchMap, shareReplay } from "rxjs/operators";
 import createGenericObjectComponent from "./components/generic-object";
 import { throwError, Observable } from "rxjs";
-import { RxQSession, QaeService } from "./types";
+import { QaeService } from "./types";
+
 
 
 export default (config: any) => {
-  const session = connectSession(config) as RxQSession;
+  const session = connectSession(config) as Session;
   const global$ = session.global$;
   const doc$ = typeof config.appname !== "undefined" ? global$.pipe(
     switchMap((h: any) => h.ask(OpenDoc, config.appname)),

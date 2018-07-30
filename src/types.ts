@@ -1,26 +1,21 @@
 import { Observable } from "rxjs";
-
-export type RxQSession = {
-  global$: Observable<any>
-  close: () => {};
-  notifications$: Observable<any>
-}
+import { Handle, Session } from "rxq";
 
 export type QaeService = {
-  session: RxQSession;
-  global$: Observable<any>;
-  doc$: Observable<any>;
+  session: Session,
+  global$: Observable<Handle>;
+  doc$: Observable<Handle>;
 }
 
 export type GenericObjectRenderProp = {
-  layout: any;
-  obj$: Observable<any>;
-  qProps: any;
+  layout: EngineAPI.IGenericObjectLayout;
+  obj$: Observable<Handle>;
+  qProps: EngineAPI.IGenericObjectProperties;
 }
 
 export interface GenericObjectProps {
   qId?: string;
-  qDef?: object;
+  qDef?: EngineAPI.IGenericObjectProperties;
   syncLayouts: boolean;
   syncQProps: boolean;
   children: (props: GenericObjectRenderProp) => React.ReactNode;

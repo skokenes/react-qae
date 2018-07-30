@@ -19,6 +19,7 @@ var _rxjs = require("rxjs");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// @ts-ignore
 var _default = function _default(config) {
   var session = (0, _rxq.connectSession)(config);
   var global$ = session.global$;

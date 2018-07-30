@@ -2,15 +2,11 @@
   "name": "react-qae",
   "version": "0.0.1",
   "description": "React integration for the Qlik Associative Engine",
-  "main": "dist/react-qae.js",
+  "main": "dist/cjs/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:cjs": "cross-env NODE_ENV=cjs babel ./ --out-dir dist/cjs --ignore node_modules,dist --extensions '.ts,.tsx,.js'",
-    "watch:cjs": "cross-env NODE_ENV=cjs babel ./ --watch --out-dir dist/cjs --ignore node_modules,dist --extensions '.ts,.tsx,.js'",
-    "build:esm": "cross-env NODE_ENV=esm webpack",
-    "build": "webpack",
-    "build-esm": "babel --no-babelrc ./ --out-dir dist/esm --ignore node_modules,dist --presets=react,es2015",
-    "watch-esm": "babel --no-babelrc ./ --watch --out-dir dist/esm --ignore node_modules,dist --presets=react,es2015"
+    "watch:cjs": "cross-env NODE_ENV=cjs babel ./ --watch --out-dir dist/cjs --ignore node_modules,dist --extensions '.ts,.tsx,.js'"
   },
   "repository": {
     "type": "git",
@@ -47,6 +43,7 @@
     "@babel/preset-typescript": "^7.0.0-beta.51",
     "@types/qlik-engineapi": "^12.67.2",
     "@types/react": "^16.4.7",
+    "@types/recompose": "^0.26.2",
     "babel-loader": "^8.0.0-beta.4",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",

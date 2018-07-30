@@ -21,9 +21,9 @@ var _operators = require("rxjs/operators");
 
 var _rxjs = require("rxjs");
 
-var _withSideEffects = _interopRequireDefault(require("../util/with-side-effects"));
+var _withSideEffects = _interopRequireDefault(require("../util/with-side-effects.js"));
 
-var _distinctProp = _interopRequireDefault(require("../util/distinctProp"));
+var _distinctProp = _interopRequireDefault(require("../util/distinctProp.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -41,19 +41,19 @@ var _default = function _default(QaeContext) {
   var GenericObject = (0, _observableConfig.componentFromStream)(function (props$) {
     // User Provided Props
     var qDef$ = (0, _distinctProp.default)("qDef")(props$);
-    var qId$ = (0, _distinctProp.default)("qDef")(props$);
+    var qId$ = (0, _distinctProp.default)("qId")(props$);
     var syncLayouts$ = (0, _distinctProp.default)("syncLayouts")(props$);
     var syncQProps$ = (0, _distinctProp.default)("syncQProps")(props$); // Unique app$
 
     var doc$ = props$.pipe((0, _distinctProp.default)("qix", "doc$"), (0, _operators.switchAll)(), (0, _operators.shareReplay)(1)); // Initialize a Generic Object
 
-    var obj$ = doc$.pipe((0, _operators.withLatestFrom)(props$), (0, _operators.switchMap)(function (_ref) {
+    var obj$ = doc$.pipe((0, _operators.withLatestFrom)(qId$), (0, _operators.switchMap)(function (_ref) {
       var _ref2 = _slicedToArray(_ref, 2),
           docH = _ref2[0],
-          props = _ref2[1];
+          qId = _ref2[1];
 
-      if (typeof props.qId !== "undefined") {
-        return docH.ask(_Doc.GetObject, props.qId);
+      if (typeof qId !== "undefined") {
+        return docH.ask(_Doc.GetObject, qId);
       } else return docH.ask(_Doc.CreateSessionObject, {
         qInfo: {
           qType: "react-qae-temp"
@@ -61,10 +61,18 @@ var _default = function _default(QaeContext) {
       });
     }), (0, _operators.shareReplay)(1)); // Object qDef changes
 
-    var effectObjChange$ = (0, _rxjs.combineLatest)(obj$, qDef$).pipe((0, _operators.switchMap)(function (_ref3) {
+    var effectObjChange$ = (0, _rxjs.combineLatest)(obj$, qDef$).pipe((0, _operators.withLatestFrom)(qId$), (0, _operators.filter)(function (_ref3) {
       var _ref4 = _slicedToArray(_ref3, 2),
-          h = _ref4[0],
-          qDef = _ref4[1];
+          _ref4$ = _slicedToArray(_ref4[0], 2),
+          handle = _ref4$[0],
+          qDef = _ref4$[1],
+          qId = _ref4[1];
+
+      return typeof qId === "undefined";
+    }), (0, _operators.pluck)("0"), (0, _operators.switchMap)(function (_ref5) {
+      var _ref6 = _slicedToArray(_ref5, 2),
+          h = _ref6[0],
+          qDef = _ref6[1];
 
       return h.ask(_GenericObject.SetProperties, qDef);
     })); // Layouts stream
@@ -85,11 +93,11 @@ var _default = function _default(QaeContext) {
       } else return (0, _rxjs.of)(null);
     })); // Props to pass to component
 
-    return (0, _rxjs.combineLatest)(props$, layout$, qProps$).pipe((0, _withSideEffects.default)(effectObjChange$), (0, _operators.map)(function (_ref5) {
-      var _ref6 = _slicedToArray(_ref5, 3),
-          props = _ref6[0],
-          layout = _ref6[1],
-          qProps = _ref6[2];
+    return (0, _rxjs.combineLatest)(props$, layout$, qProps$).pipe((0, _withSideEffects.default)(effectObjChange$), (0, _operators.map)(function (_ref7) {
+      var _ref8 = _slicedToArray(_ref7, 3),
+          props = _ref8[0],
+          layout = _ref8[1],
+          qProps = _ref8[2];
 
       return props.children({
         layout: layout,

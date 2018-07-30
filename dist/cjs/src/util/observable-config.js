@@ -3,7 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.mapPropsStream = exports.componentFromStream = void 0;
+exports.componentFromStream = componentFromStream;
+exports.mapPropsStream = void 0;
 
 var _rxjs = require("rxjs");
 
@@ -14,8 +15,12 @@ var config = {
   toESObservable: function toESObservable(stream) {
     return stream;
   }
-};
-var componentFromStream = (0, _recompose.componentFromStreamWithConfig)(config);
-exports.componentFromStream = componentFromStream;
+}; // const componentFromStream =componentFromStreamWithConfig(config);
+
+function componentFromStream(propsToReactNode) {
+  // @ts-ignore
+  return (0, _recompose.componentFromStreamWithConfig)(config)(propsToReactNode);
+}
+
 var mapPropsStream = (0, _recompose.mapPropsStreamWithConfig)(config);
 exports.mapPropsStream = mapPropsStream;
