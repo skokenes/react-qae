@@ -1,12 +1,13 @@
 {
   "name": "react-qae",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React integration for the Qlik Associative Engine",
-  "main": "dist/cjs/index.js",
+  "main": "cjs/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:cjs": "cross-env NODE_ENV=cjs babel ./ --out-dir dist/cjs --ignore node_modules,dist --extensions '.ts,.tsx,.js'",
-    "watch:cjs": "cross-env NODE_ENV=cjs babel ./ --watch --out-dir dist/cjs --ignore node_modules,dist --extensions '.ts,.tsx,.js'"
+    "watch:cjs": "cross-env NODE_ENV=cjs babel ./ --watch --out-dir dist/cjs --ignore node_modules,dist --extensions '.ts,.tsx,.js'",
+    "publish:dist": "npm run build:cjs && cp package.json dist && npm publish dist"
   },
   "repository": {
     "type": "git",
