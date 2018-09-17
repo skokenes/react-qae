@@ -30,14 +30,6 @@ declare module "rxq" {
     ws?: WebSocket;
   }
 
-  export interface Session {
-    global$: Observable<Handle>;
-    notifications$: Observable<any>;
-    close: () => {},
-    suspend: () => {},
-    unsuspend: () => {}
-  }
-
   export interface Handle {
     session: any;
     handle: number;
@@ -45,4 +37,13 @@ declare module "rxq" {
     invalidated$: Observable<Handle>;
     ask: (method: string, ...args: any[]) => Observable<any>
   }
+
+  export interface Session {
+    global$: Observable<Handle>;
+    notifications$: Observable<any>;
+    close: () => {};
+    suspend: () => {};
+    unsuspend: () => {};
+  }
+
 }

@@ -2,7 +2,8 @@ import { from, Observable } from "rxjs";
 import React, { ReactNode } from "react";
 import {
   componentFromStreamWithConfig,
-  mapPropsStreamWithConfig
+  mapPropsStreamWithConfig,
+  createEventHandlerWithConfig
 } from "recompose";
 
 const config = {
@@ -12,13 +13,15 @@ const config = {
   }
 };
 
-// const componentFromStream =componentFromStreamWithConfig(config);
-
-function componentFromStream<T>(propsToReactNode: (input: Observable<T>) => Observable<ReactNode>) {
+function componentFromStream<T>(
+  propsToReactNode: (input: Observable<T>) => Observable<ReactNode>
+) {
   // @ts-ignore
   return componentFromStreamWithConfig(config)<T>(propsToReactNode);
 }
 
 const mapPropsStream = mapPropsStreamWithConfig(config);
 
-export { componentFromStream, mapPropsStream };
+const createEventHandler = createEventHandlerWithConfig(config);
+
+export { componentFromStream, mapPropsStream, createEventHandler };
