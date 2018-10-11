@@ -25,11 +25,11 @@ import {
   GenericObjectStreams
 } from "../types.js";
 import distinctProp from "../util/distinctProp.js";
+import QaeContext from "../qae-context";
 
 type GenericObjectModel = GenericObjectProps & { qix: QaeService };
 
-export default (
-  QaeContext: React.Context<QaeService>,
+const createGenericObject = (
   extendProps: (streams: GenericObjectStreams) => Observable<object> = () =>
     of({})
 ) => {
@@ -136,13 +136,22 @@ export default (
     }
   );
 
-  const ConnectedGenericObject = (props: GenericObjectProps) => (
+  const ConnectedGenericObject: React.SFC<GenericObjectProps> = (
+    props: GenericObjectProps
+  ) => (
     <QaeContext.Consumer>
-      {(qix: QaeService) => (
-        <GenericObject qix={qix} {...props}>
-          {props.children}
-        </GenericObject>
-      )}
+      {qix => {
+        if (qix === null) {
+          throw Error(
+            "QaeService was not defined. Did you forget to pass a QaeService in the Provider?"
+          );
+        }
+        return (
+          <GenericObject qix={qix} {...props}>
+            {props.children}
+          </GenericObject>
+        );
+      }}
     </QaeContext.Consumer>
   );
 
@@ -154,5 +163,11 @@ export default (
 
   return defaultProps(GenericObjectDefaults)(
     ConnectedGenericObject
-  ) as React.ComponentType<GenericObjectProps>;
+  ) as React.SFC<GenericObjectProps>;
 };
+
+const GenericObject = createGenericObject();
+
+export default GenericObject;
+
+export { createGenericObject };

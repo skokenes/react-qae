@@ -1,25 +1,21 @@
 import React from "react";
-import createGenericObjectComponent from "./generic-object";
+import { createGenericObject } from "./generic-object";
 import {
   GenericObjectStreams,
   GenericObjectProps,
-  QaeService,
   ListObjectProps
 } from "../types";
-import { of, Observable, combineLatest, merge } from "rxjs";
+import { Observable, combineLatest, merge } from "rxjs";
 import {
   componentFromStream,
   createEventHandler
 } from "../util/observable-config.js";
-import distinctProp from "../util/distinctProp";
 import {
-  pluck,
   distinctUntilChanged,
   map,
   filter,
   withLatestFrom,
   switchMap,
-  tap,
   ignoreElements
 } from "rxjs/operators";
 
@@ -108,35 +104,27 @@ const extendLogic = (streams: GenericObjectStreams) => {
   return merge(extendedProps$, selectSideEffect$);
 };
 
-// Create List Object Component from a QaeService
-const createListObjectComponent = (QaeContext: React.Context<QaeService>) => {
-  const GenericObjectWithListObjectLogic = createGenericObjectComponent(
-    QaeContext,
-    extendLogic
-  );
+const GenericObjectWithListObjectLogic = createGenericObject(extendLogic);
 
-  const ListObject = componentFromStream(
-    (props$: Observable<ListObjectProps>) => {
-      const qDef$ = props$.pipe(
-        map(props => props.qListObjectDef),
-        distinctUntilChanged(),
-        map(qListObjectDef => ({
-          qInfo: { qType: "react-qae-hypercube" },
-          qListObjectDef: qListObjectDef
-        }))
-      );
+const ListObject = componentFromStream(
+  (props$: Observable<ListObjectProps>) => {
+    const qDef$ = props$.pipe(
+      map(props => props.qListObjectDef),
+      distinctUntilChanged(),
+      map(qListObjectDef => ({
+        qInfo: { qType: "react-qae-hypercube" },
+        qListObjectDef: qListObjectDef
+      }))
+    );
 
-      return combineLatest(props$, qDef$).pipe(
-        map(([props, qDef]) => (
-          <GenericObjectWithListObjectLogic {...props} qDef={qDef}>
-            {props.children}
-          </GenericObjectWithListObjectLogic>
-        ))
-      );
-    }
-  );
+    return combineLatest(props$, qDef$).pipe(
+      map(([props, qDef]) => (
+        <GenericObjectWithListObjectLogic {...props} qDef={qDef}>
+          {props.children}
+        </GenericObjectWithListObjectLogic>
+      ))
+    );
+  }
+);
 
-  return ListObject;
-};
-
-export default createListObjectComponent;
+export default ListObject;
