@@ -36,6 +36,14 @@ const extendLogic = (streams: GenericObjectStreams) => {
     }>;
   } = createEventHandler();
 
+  const {
+    handler: askHandler,
+    stream: ask$
+  }: {
+    handler: (params: any) => void;
+    stream: Observable<any>;
+  } = createEventHandler();
+
   const selectListObjectValues = (
     qValues: number[],
     qToggleMode: boolean,
@@ -44,13 +52,19 @@ const extendLogic = (streams: GenericObjectStreams) => {
     selectListObjectValuesHandler({ qValues, qToggleMode, qSoftLock });
   };
 
+  const ask = (...args: any[]) => {
+    askHandler(args);
+  };
+
   const props$ = streams.props$ as Observable<
     GenericObjectProps & ListObjectProps
   >;
   const layouts$ = streams.layouts$;
   const obj$ = streams.obj$;
   const dataPageDef$ = props$.pipe(
-    map(props => props.dataPageDef),
+    map(
+      props => props.dataPageDef || { qTop: 0, qLeft: 0, qWidth: 0, qHeight: 0 }
+    ),
     distinctUntilChanged((a, b) => {
       return (
         a.qTop === b.qTop &&
@@ -69,12 +83,13 @@ const extendLogic = (streams: GenericObjectStreams) => {
     map(arr => arr[1]),
     withLatestFrom(obj$),
     switchMap(
-      ([dataPageDef, handle]): Observable<EngineAPI.INxDataPage> => {
+      ([dataPageDef, handle]): Observable<EngineAPI.INxDataPage[]> => {
         return handle.ask("GetListObjectData", "/qListObjectDef", [
           dataPageDef
         ]);
       }
-    )
+    ),
+    map(data => data[0])
   );
 
   // Side Effects
